@@ -2,7 +2,7 @@ const { mongoose } = require("../data/conectionBD.js");
 
 
 const Schema = new mongoose.Schema({
-  id: {type: String, required: true},
+  id_user: {type: String, required: true},
   username: {type: String, required: true},
   description: {type: String, required: true},
   duration : {type: Number, required: true},

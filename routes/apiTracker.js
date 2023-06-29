@@ -1,7 +1,7 @@
 const express = require("express");
 const bodyParser = require("body-parser");
 
-const { saveUser } = require("../controller/createUser.js")
+const { saveUser, findUsers } = require("../controller/createUser.js")
 const { saveTracker } = require("../controller/createTracker.js");
 
 const routes = express.Router();
@@ -14,7 +14,10 @@ routes.get("/", (req, res)=>{
   res.json({"Message": "Bienvenido"});
 })
 
-routes.post("/users", async (req, res)=>{
+routes.route("/users").get( async (req, res) =>{
+  res.json(await findUsers());
+
+}).post(async (req, res)=>{
   const { username } = req.body;
   const user = await saveUser(username)
     .then(u => res.json(u));
@@ -25,7 +28,14 @@ routes.post("/users/:id/exercises", (req, res)=>{
   const {description, duration, date} = req.body;
 
   saveTracker(id ,req.body)
-    .then(inf => res.json(inf));
+    .then(inf => res.json({
+      "_id": inf.id_user,
+      "username": inf.username,
+      "description": inf.description,
+      "duration": inf.duration,
+      "date": inf.date
+    }))
+    .catch(e => res.json({error : e}));
 
 });
 

@@ -23,4 +23,13 @@ const saveUser= async (newUser) =>{
   };
 };
 
-module.exports.saveUser = saveUser
+const findUsers = async() =>{
+  let finds = await user.find();
+
+  return finds;
+};
+
+module.exports = {
+  saveUser, 
+  findUsers
+}

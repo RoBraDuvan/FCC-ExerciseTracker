@@ -26,16 +26,23 @@ const saveUser = async (newUser) =>{
 
 //---------------------------------------------
 const saveTracker = async (idUser, arrayUser)=>{
-
+  let objectTracker = {};
   const {description, duration, date} = arrayUser;
+  const usuario = await user.findById(idUser)
 
-  const usuario = await user.findById(idUser);
+   if (usuario){
+    objectTracker["id_user"]=usuario._id;
+    objectTracker["username"]=usuario.username;
+    objectTracker["description"] = description;
+    objectTracker["duration"] = duration;
+    objectTracker["date"] = date? new Date(date).toDateString(): new Date().toDateString();
+  };
+  
+  let t = new tracker(objectTracker);
 
-  console.log(usuario);
+  let newT = await t.save();
 
-
-
-  let d = new Date (date).toDateString();
+  return objectTracker;
 
   // let datos = await tracker.findByIdAndUpdate(idUser,  {description, duration, d});
 
