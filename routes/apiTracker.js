@@ -2,7 +2,7 @@ const express = require("express");
 const bodyParser = require("body-parser");
 
 const { saveUser, findUsers } = require("../controller/createUser.js")
-const { saveTracker } = require("../controller/createTracker.js");
+const { saveTracker, exercisesLog } = require("../controller/createTracker.js");
 
 const routes = express.Router();
 
@@ -10,19 +10,31 @@ const routes = express.Router();
 routes.use(bodyParser.urlencoded({extended: true}));
 routes.use(bodyParser.json());
 
+//------------------------------------------------
 routes.get("/", (req, res)=>{
   res.json({"Message": "Bienvenido"});
 })
 
-routes.route("/users").get( async (req, res) =>{
-  res.json(await findUsers());
+//-------------------------------------------------
+routes.get("/users", async (req, res) =>{
+  let usuarios = await findUsers();
 
-}).post(async (req, res)=>{
+  res.json(usuarios);
+});
+
+routes.post("/users",async (req, res)=>{
   const { username } = req.body;
   const user = await saveUser(username)
     .then(u => res.json(u));
 });
 
+//-------------------------------------------------
+routes.get("/users/:id/logs", async(req, res)=>{
+  let { id } = req.params;
+  res.json(await exercisesLog(id));
+});
+
+//-----------------------------------------------
 routes.post("/users/:id/exercises", (req, res)=>{
   const { id } = req.params;
   const {description, duration, date} = req.body;

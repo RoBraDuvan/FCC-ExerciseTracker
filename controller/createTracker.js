@@ -48,6 +48,24 @@ const saveTracker = async (idUser, arrayUser)=>{
 
 };
 
+
+const exercisesLog = async (id_user, lim = 10000)=>{
+   const ex = await tracker.find({id_user}).limit(lim).sort({date: -1})
+
+  let log = ex.map(ex => ({
+    "description" : ex.description,
+    "duration": ex.duration,
+    "date": ex.date
+  }));
+
+  return {
+    _id: ex[0]._id, 
+    username: ex[0].username,
+    count: ex.length,
+    log
+  };
+}
 module.exports = {
-  saveTracker
+  saveTracker,
+  exercisesLog
 };
