@@ -1,8 +1,9 @@
 const express = require("express");
 const bodyParser = require("body-parser");
 
-const { saveUser, findUsers } = require("../controller/createUser.js")
+const { saveUser, findAllUsers } = require("../controller/createUser.js")
 const { saveTracker, exercisesLog } = require("../controller/createTracker.js");
+
 
 const routes = express.Router();
 
@@ -17,7 +18,7 @@ routes.get("/", (req, res)=>{
 
 //-------------------------------------------------
 routes.get("/users", async (req, res) =>{
-  let usuarios = await findUsers();
+  let usuarios = await findAllUsers();
 
   res.json(usuarios);
 });
@@ -30,12 +31,14 @@ routes.post("/users",async (req, res)=>{
 
 //-------------------------------------------------
 routes.get("/users/:id/logs", async(req, res)=>{
+  
   let { id } = req.params;
-  res.json(await exercisesLog(id));
+  res.json(await exercisesLog(id, req.query));
 });
 
 //-----------------------------------------------
 routes.post("/users/:id/exercises", (req, res)=>{
+
   const { id } = req.params;
   const {description, duration, date} = req.body;
 
